@@ -8,12 +8,12 @@ const createStore = (initialValue) => {
             super(props)
             this.state = initialValue || {}
         }
-        setGlobalStateDecorator = (...args) => {
+        setGlobalStateDecorator = async (...args) => {
             let newState = args[0], setStateCallback = args[1];
 
             if(typeof args[0] === 'function'){
                 const fun = args[0];
-                newState = fun(this.state);
+                newState = await fun(this.state);
             }
 
             this.setState(newState, setStateCallback);
@@ -27,7 +27,7 @@ const createStore = (initialValue) => {
         }
     }
 
-    const withStore = (WrappedComponent, mapProps )=> {
+    const withStore = ( WrappedComponent, mapProps )=> {
         return function (props) {
             let extraProps = null;
             if(StoreContext) {
