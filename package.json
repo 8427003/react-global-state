@@ -1,7 +1,7 @@
 {
-  "name": "react-global-state",
+  "name": "react-global-use-reducer",
   "version": "1.0.0",
-  "description": "react-global-state",
+  "description": "react-global-use-reducer",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,15 +11,16 @@
     "url": "git+https://github.com/8427003/react-global-state.git"
   },
   "keywords": [
+    "global-use-reducer",
+    "globalUseReducer",
     "react",
-    "global-state",
     "react-context",
     "react-hook"
   ],
   "author": "cocoo",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/8427003/react-global-state/issues"
+    "url": "https://github.com/8427003/global-use-reducer/issues"
   },
-  "homepage": "https://github.com/8427003/react-global-state#readme"
+  "homepage": "https://github.com/8427003/global-use-reducer#readme"
 }
