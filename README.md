@@ -1,4 +1,4 @@
-# react-global-state
+# react-global-use-reducer
 
 ### sample
 
