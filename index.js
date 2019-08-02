@@ -1,54 +1,31 @@
-import React, { useContext } from 'react'
+import React, { useContext, useReducer } from 'react'
 
-const createStore = (initialValue) => {
-    let StoreContext = React.createContext();
+const StoreContext = React.createContext(null);
 
-    class Provider extends  React.Component  {
-        constructor(props) {
-            super(props)
-            this.state = initialValue || {}
-        }
-        setGlobalStateDecorator = async (...args) => {
-            let newState = args[0], setStateCallback = args[1];
+export const Provider = props => {
+    const [state, dispatch] = useReducer(props.reducer, props.store);
+    const Context = props.context || StoreContext;
 
-            if(typeof args[0] === 'function'){
-                const fun = args[0];
-                newState = await fun(this.state);
-            }
-
-            this.setState(newState, setStateCallback);
-        }
-        render() {
-            return (
-                <StoreContext.Provider value={{globalState: this.state, setGlobalState: this.setGlobalStateDecorator}}>
-                    {this.props.children}
-                </StoreContext.Provider>
-            )
-        }
-    }
-
-    const withStore = ( WrappedComponent, mapProps )=> {
-        return function (props) {
-            let extraProps = null;
-            if(StoreContext) {
-                const context = useContext(StoreContext);
-                if(typeof mapProps === 'function') {
-                    console.log(context);
-                    extraProps = mapProps(context) || {}
-                }
-                else {
-                    extraProps = context || {};
-                }
-                return <WrappedComponent {...extraProps} {...props} />
-            }
-            return <WrappedComponent {...props} />
-        }
-    }
-
-    return {
-        Provider,
-        withStore
-    }
+    return (
+        <StoreContext.Provider value={{ state, dispatch }}>
+            {props.children}
+        </StoreContext.Provider>
+    )
 }
 
-export default createStore
+export const connect = (WrappedComponent, mapProps) => {
+    return function (props) {
+        let extraProps = null;
+        if(StoreContext) {
+            const context = useContext(StoreContext);
+            if(typeof mapProps === 'function') {
+                extraProps = mapProps(context) || {}
+            }
+            else {
+                extraProps = context || {};
+            }
+            return <WrappedComponent {...extraProps} {...props} />
+        }
+        return <WrappedComponent {...props} />
+    }
+}

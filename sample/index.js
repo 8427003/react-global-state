@@ -1,62 +1,70 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom';
-import { PP,PPP }from './components.js'
-import { Provider, withStore } from './store.js'
-import { Provider as Provider2, withStore  as withStore2} from './store2.js'
+import { Provider, connect } from '../index.js'
 
-const PPC = withStore(PP, ({ globalState, setGlobalState }) => {
-    return {
-        name: globalState.name,
-        other: globalState.other,
-        setGlobalState,
-    }
-});
-const PPPC = withStore(PPP, ({ globalState, setGlobalState }) => {
-    return {
-        name: globalState.name,
-        other: globalState.other,
-        setGlobalState,
-    }
-});
-
-const PPC2 = withStore2(PP, ({ globalState, setGlobalState }) => {
-    return {
-        name: globalState.name,
-        other: globalState.other,
-        setGlobalState,
-    }
-});
-
-const PPPC2 = withStore2(PPP, ({ globalState, setGlobalState }) => {
-    return {
-        name: globalState.name,
-        other: globalState.other,
-        setGlobalState,
-    }
-});
-
-const MyContainer = props => {
+function SubApp ({a, updateA}) {
     return (
         <div>
-            <Provider>
-                <PPC>
-                    <PPPC />
-                </PPC>
-            </Provider>
-            <div>---------------</div>
-            <Provider2>
-                <PPC2>
-                    <PPPC2 />
-                </PPC2>
-            </Provider2>
+            <div>{a}</div>
+            <button onClick={() => updateA(a + 1)}>plus</button>
         </div>
     )
 }
 
-ReactDOM.render(
-    <MyContainer />,
-    document.getElementById('root')
-);
+const SubApp1 = connect(SubApp, ({ state, dispatch }) => {
+    return {
+        a: state.a,
+        updateA: (a) => {
+            dispatch({
+                type: 'UPDATE',
+                playload: a,
+            })
+        }
+    }
+})
+const SubApp2 = connect(SubApp, ({ state, dispatch }) => {
+    return {
+        a: state.a,
+        updateA: (a) => {
+            dispatch({
+                type: 'UPDATE',
+                playload: a,
+            })
+        }
+    }
+})
 
-
-
+export default class BigApp extends Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+            <div>
+                <Provider
+                    reducer={(state, action) => {
+                        console.log('reduce1....',state, action);
+                        switch(action.type) {
+                            case 'UPDATE':
+                                return {a: action.playload};
+                        }
+                        return state;
+                    }}
+                    store={{a: 11}}>
+                    <SubApp1 />
+                </Provider>
+                <Provider
+                    reducer={(state, action) => {
+                        console.log('reduce2....',state, action);
+                        switch(action.type) {
+                            case 'UPDATE':
+                                return {a: action.playload};
+                        }
+                        return state;
+                    }}
+                    store={{a: 22}}>
+                    <SubApp2  />
+                </Provider>
+            </div>
+        )
+    }
+}
