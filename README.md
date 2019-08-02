@@ -26,6 +26,7 @@ const SubApp1 = connect(SubApp, ({ state, dispatch }) => {
         }
     }
 })
+
 const SubApp2 = connect(SubApp, ({ state, dispatch }) => {
     return {
         a: state.a,
